@@ -1,0 +1,66 @@
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
+
+function buildHomeFilter(query) {
+  const { priceMin, priceMax, sqftMin, sqftMax, lotSizeMin, lotSizeMax, bedrooms, bathrooms } = query;
+  const where = {};
+
+  if (priceMin) where.priceMin = { ...where.priceMin, gte: parseInt(priceMin) };
+  if (priceMax) where.priceMin = { ...where.priceMin, lte: parseInt(priceMax) };
+
+  if (sqftMin) where.sqft = { ...where.sqft, gte: parseInt(sqftMin) };
+  if (sqftMax) where.sqft = { ...where.sqft, lte: parseInt(sqftMax) };
+
+  if (lotSizeMin) where.lotSizeSqft = { ...where.lotSizeSqft, gte: parseInt(lotSizeMin) };
+  if (lotSizeMax) where.lotSizeSqft = { ...where.lotSizeSqft, lte: parseInt(lotSizeMax) };
+
+  if (bedrooms) where.bedrooms = { gte: parseInt(bedrooms) };
+  if (bathrooms) where.bathrooms = { gte: parseFloat(bathrooms) };
+
+  return where;
+}
+
+async function getCommunities(req, res) {
+  try {
+    const homeWhere = buildHomeFilter(req.query);
+    const hasFilters = Object.keys(homeWhere).length > 0;
+
+    const communities = await prisma.community.findMany({
+      where: hasFilters ? { homes: { some: homeWhere } } : undefined,
+      include: {
+        homes: {
+          where: hasFilters ? homeWhere : undefined,
+          orderBy: { priceMin: 'asc' },
+        },
+      },
+      orderBy: { name: 'asc' },
+    });
+
+    res.json({ data: communities });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to fetch communities' });
+  }
+}
+
+async function getCommunityById(req, res) {
+  try {
+    const id = parseInt(req.params.id);
+    const community = await prisma.community.findUnique({
+      where: { id },
+      include: { homes: { orderBy: { priceMin: 'asc' } } },
+    });
+
+    if (!community) {
+      return res.status(404).json({ error: 'Community not found' });
+    }
+
+    res.json({ data: community });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to fetch community' });
+  }
+}
+
+module.exports = { getCommunities, getCommunityById };
