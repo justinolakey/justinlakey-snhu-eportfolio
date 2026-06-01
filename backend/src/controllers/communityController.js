@@ -63,4 +63,33 @@ async function getCommunityById(req, res) {
   }
 }
 
-module.exports = { getCommunities, getCommunityById };
+async function createCommunity(req, res) {
+  const { name, builder, description, address, city, state, zipCode, latitude, longitude, website } = req.body;
+
+  if (!name || !builder || !address || !city || !state || !zipCode || latitude == null || longitude == null) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  try {
+    const community = await prisma.community.create({
+      data: {
+        name,
+        builder,
+        description: description || null,
+        address,
+        city,
+        state,
+        zipCode,
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude),
+        website: website || null,
+      },
+    });
+    res.status(201).json({ data: community });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to create community' });
+  }
+}
+
+module.exports = { getCommunities, getCommunityById, createCommunity };

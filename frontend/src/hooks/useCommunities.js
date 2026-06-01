@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { fetchCommunities } from '../services/api';
 
 export function useCommunities(filters) {
   const [communities, setCommunities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [tick, setTick] = useState(0);
   const filterKey = JSON.stringify(filters);
 
   useEffect(() => {
@@ -25,7 +26,9 @@ export function useCommunities(filters) {
 
     load();
     return () => { cancelled = true; };
-  }, [filterKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [filterKey, tick]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return { communities, loading, error };
+  const refetch = useCallback(() => setTick((t) => t + 1), []);
+
+  return { communities, loading, error, refetch };
 }
