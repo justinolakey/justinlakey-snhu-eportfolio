@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useCommunities } from './hooks/useCommunities';
 import { useAuth } from './contexts/AuthContext';
 import FilterPanel from './components/FilterPanel/FilterPanel';
@@ -8,6 +8,27 @@ import AuthModal from './components/Auth/AuthModal';
 import AddCommunityModal from './components/AddCommunity/AddCommunityModal';
 import AdminPanel from './components/AdminPanel/AdminPanel';
 import './App.css';
+
+function haversine(lat1, lng1, lat2, lng2) {
+  const R = 3958.8;
+  const toRad = (d) => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function minPrice(c) {
+  if (!c.homes?.length) return Infinity;
+  return Math.min(...c.homes.map((h) => h.priceMin));
+}
+
+function maxPrice(c) {
+  if (!c.homes?.length) return -Infinity;
+  return Math.max(...c.homes.map((h) => h.priceMax ?? h.priceMin));
+}
 
 const EMPTY_FILTERS = {
   priceMin: '',
@@ -23,6 +44,9 @@ const EMPTY_FILTERS = {
 export default function App() {
   const [pendingFilters, setPendingFilters] = useState(EMPTY_FILTERS);
   const [appliedFilters, setAppliedFilters] = useState(EMPTY_FILTERS);
+  const [locationInput, setLocationInput] = useState('');
+  const [appliedLocation, setAppliedLocation] = useState('');
+  const [sortBy, setSortBy] = useState('default');
   const [selectedId, setSelectedId] = useState(null);
   const [modal, setModal] = useState(null); // 'auth' | 'add' | 'admin'
 
@@ -33,8 +57,44 @@ export default function App() {
     setSelectedId((prev) => (prev === id ? null : id));
   }
 
+  const sortedCommunities = useMemo(() => {
+    if (sortBy === 'price-asc') return [...communities].sort((a, b) => minPrice(a) - minPrice(b));
+    if (sortBy === 'price-desc') return [...communities].sort((a, b) => maxPrice(b) - maxPrice(a));
+    if (sortBy === 'distance' && appliedLocation) {
+      const term = appliedLocation.toLowerCase();
+      const matches = communities.filter(
+        (c) =>
+          c.city.toLowerCase().includes(term) ||
+          c.state.toLowerCase().includes(term) ||
+          c.zipCode.includes(term)
+      );
+      if (matches.length > 0) {
+        const centerLat = matches.reduce((s, c) => s + c.latitude, 0) / matches.length;
+        const centerLng = matches.reduce((s, c) => s + c.longitude, 0) / matches.length;
+        return [...communities].sort(
+          (a, b) =>
+            haversine(a.latitude, a.longitude, centerLat, centerLng) -
+            haversine(b.latitude, b.longitude, centerLat, centerLng)
+        );
+      }
+    }
+    return communities;
+  }, [communities, sortBy, appliedLocation]);
+
   function handleCreated() {
     refetch();
+  }
+
+  function applyLocation() {
+    const trimmed = locationInput.trim();
+    setAppliedLocation(trimmed);
+    if (trimmed) setSortBy('distance');
+  }
+
+  function clearLocation() {
+    setLocationInput('');
+    setAppliedLocation('');
+    setSortBy('default');
   }
 
   return (
@@ -47,7 +107,7 @@ export default function App() {
 
         <div className="header-right">
           <span className="header-count">
-            {loading ? 'Searching…' : `${communities.length} communit${communities.length === 1 ? 'y' : 'ies'} found`}
+            {loading ? 'Searching…' : `${sortedCommunities.length} communit${sortedCommunities.length === 1 ? 'y' : 'ies'} found`}
           </span>
 
           {user ? (
@@ -73,6 +133,25 @@ export default function App() {
 
       <div className="app-body">
         <aside className="sidebar">
+          <div className="location-search-bar">
+            <div className="location-search-input-wrap">
+              <input
+                type="text"
+                placeholder="Search by city, state, or ZIP…"
+                value={locationInput}
+                onChange={(e) => setLocationInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && applyLocation()}
+              />
+              {appliedLocation && (
+                <button className="location-clear-btn" onClick={clearLocation} title="Clear location search">✕</button>
+              )}
+            </div>
+            <button className="location-search-btn" onClick={applyLocation}>Search</button>
+          </div>
+          {appliedLocation && (
+            <p className="location-label">Showing results near "{appliedLocation}"</p>
+          )}
+
           <FilterPanel
             filters={pendingFilters}
             onChange={setPendingFilters}
@@ -80,12 +159,26 @@ export default function App() {
             onClear={() => {
               setPendingFilters(EMPTY_FILTERS);
               setAppliedFilters(EMPTY_FILTERS);
+              setLocationInput('');
+              setAppliedLocation('');
             }}
           />
+          <div className="sort-bar">
+            <label htmlFor="sort-select">Sort</label>
+            <select id="sort-select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+              <option value="default">Default (A–Z)</option>
+              <option value="price-asc">Price (Low to High)</option>
+              <option value="price-desc">Price (High to Low)</option>
+              <option value="distance" disabled={!appliedLocation}>
+                {appliedLocation ? 'Closest to Location' : 'Closest to Location (search a location first)'}
+              </option>
+            </select>
+          </div>
+
           <div className="list-scroll">
             {error && <p className="error-notice">{error}</p>}
             <CommunityList
-              communities={communities}
+              communities={sortedCommunities}
               loading={loading}
               selectedId={selectedId}
               onSelect={handleSelect}
@@ -95,7 +188,7 @@ export default function App() {
 
         <main className="map-area">
           <MapView
-            communities={communities}
+            communities={sortedCommunities}
             selectedId={selectedId}
             onSelect={handleSelect}
           />

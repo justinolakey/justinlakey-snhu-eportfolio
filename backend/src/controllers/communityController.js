@@ -2,6 +2,17 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
+function haversine(lat1, lng1, lat2, lng2) {
+  const R = 3958.8;
+  const toRad = (d) => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
 function buildHomeFilter(query) {
   const { priceMin, priceMax, sqftMin, sqftMax, lotSizeMin, lotSizeMax, bedrooms, bathrooms } = query;
   const where = {};
@@ -24,13 +35,14 @@ function buildHomeFilter(query) {
 async function getCommunities(req, res) {
   try {
     const homeWhere = buildHomeFilter(req.query);
-    const hasFilters = Object.keys(homeWhere).length > 0;
+    const hasHomeFilters = Object.keys(homeWhere).length > 0;
+    const { location } = req.query;
 
     const communities = await prisma.community.findMany({
-      where: hasFilters ? { homes: { some: homeWhere } } : undefined,
+      where: hasHomeFilters ? { homes: { some: homeWhere } } : undefined,
       include: {
         homes: {
-          where: hasFilters ? homeWhere : undefined,
+          where: hasHomeFilters ? homeWhere : undefined,
           orderBy: { priceMin: 'asc' },
         },
       },
