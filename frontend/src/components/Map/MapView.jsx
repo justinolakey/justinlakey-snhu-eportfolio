@@ -22,6 +22,21 @@ function FitBounds({ communities }) {
   return null;
 }
 
+function FocusBounds({ bounds }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!bounds || bounds.length === 0) return;
+    if (bounds.length === 1) {
+      map.setView(bounds[0], 12, { animate: true });
+    } else {
+      map.fitBounds(bounds, { padding: [64, 64], maxZoom: 13 });
+    }
+  }, [bounds, map]);
+
+  return null;
+}
+
 function PanToSelected({ communities, selectedId }) {
   const map = useMap();
 
@@ -36,12 +51,7 @@ function PanToSelected({ communities, selectedId }) {
 
 function CommunityMarker({ community, selected, onSelect }) {
   const markerRef = useRef(null);
-  const homes = community.homes ?? [];
-  const prices = homes.map((h) => h.priceMin);
-  const beds = homes.map((h) => h.bedrooms);
-  const minPrice = prices.length ? Math.min(...prices) : null;
-  const minBed = beds.length ? Math.min(...beds) : null;
-  const maxBed = beds.length ? Math.max(...beds) : null;
+  const { priceMin, bedroomsMin, bedroomsMax } = community;
 
   useEffect(() => {
     if (selected && markerRef.current) {
@@ -62,34 +72,29 @@ function CommunityMarker({ community, selected, onSelect }) {
       }}
       eventHandlers={{ click: () => onSelect(community.id) }}
     >
-      <Popup>
+      <Popup autoPan={false}>
         <div className="map-popup">
           <strong className="popup-name">{community.name}</strong>
           <span className="popup-builder">{community.builder}</span>
           <span className="popup-location">{community.city}, {community.state}</span>
-          {minPrice && (
-            <span className="popup-price">From {fmt(minPrice)}</span>
-          )}
-          {minBed && (
-            <span className="popup-detail">
-              {minBed === maxBed ? `${minBed} bed` : `${minBed}–${maxBed} beds`}
-              &nbsp;· {homes.length} model{homes.length !== 1 ? 's' : ''}
-            </span>
-          )}
+          <span className="popup-price">From {fmt(priceMin)}</span>
+          <span className="popup-detail">
+            {bedroomsMin === bedroomsMax ? `${bedroomsMin} bed` : `${bedroomsMin}–${bedroomsMax} beds`}
+          </span>
         </div>
       </Popup>
     </CircleMarker>
   );
 }
 
-export default function MapView({ communities, selectedId, onSelect }) {
+export default function MapView({ communities, selectedId, onSelect, focusBounds }) {
   return (
     <MapContainer center={[31.5, -97.5]} zoom={6} className="map-container">
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <FitBounds communities={communities} />
+      {focusBounds ? <FocusBounds bounds={focusBounds} /> : <FitBounds communities={communities} />}
       <PanToSelected communities={communities} selectedId={selectedId} />
       {communities.map((c) => (
         <CommunityMarker

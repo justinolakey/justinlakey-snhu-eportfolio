@@ -3,7 +3,6 @@ const express = require("express");
 const cors = require("cors");
 
 const communityRoutes = require("./routes/communities");
-const homeRoutes = require("./routes/homes");
 const userRoutes = require("./routes/user");
 const adminRoutes = require("./routes/admin");
 
@@ -14,7 +13,6 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/communities", communityRoutes);
-app.use("/api/homes", homeRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
 

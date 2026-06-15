@@ -13,19 +13,9 @@ const STATUS_LABEL = {
 };
 
 export default function CommunityCard({ community, selected, onClick }) {
-  const homes = community.homes ?? [];
-  const prices = homes.map((h) => h.priceMin);
-  const beds = homes.map((h) => h.bedrooms);
-  const baths = homes.map((h) => h.bathrooms);
-
-  const minPrice = prices.length ? Math.min(...prices) : null;
-  const maxPrice = prices.length ? Math.max(...prices) : null;
-  const minBed = beds.length ? Math.min(...beds) : null;
-  const maxBed = beds.length ? Math.max(...beds) : null;
-  const minBath = baths.length ? Math.min(...baths) : null;
-  const maxBath = baths.length ? Math.max(...baths) : null;
-
-  const statuses = [...new Set(homes.map((h) => h.status))];
+  const {
+    priceMin, priceMax, sqftMin, sqftMax, bedroomsMin, bedroomsMax, bathroomsMin, bathroomsMax, status,
+  } = community;
 
   return (
     <li className={`community-card${selected ? ' selected' : ''}`} onClick={onClick}>
@@ -35,11 +25,9 @@ export default function CommunityCard({ community, selected, onClick }) {
           <p className="card-builder">{community.builder}</p>
         </div>
         <div className="card-badges">
-          {statuses.map((s) => (
-            <span key={s} className={`badge ${STATUS_LABEL[s]?.cls}`}>
-              {STATUS_LABEL[s]?.text ?? s}
-            </span>
-          ))}
+          <span className={`badge ${STATUS_LABEL[status]?.cls}`}>
+            {STATUS_LABEL[status]?.text ?? status}
+          </span>
         </div>
       </div>
 
@@ -47,26 +35,24 @@ export default function CommunityCard({ community, selected, onClick }) {
         📍 {community.city}, {community.state} {community.zipCode}
       </p>
 
-      {homes.length > 0 && (
-        <div className="card-stats">
-          <div className="stat">
-            <span className="stat-val">{minPrice ? fmt(minPrice) : '—'}{maxPrice && maxPrice !== minPrice ? ` – ${fmt(maxPrice)}` : ''}</span>
-            <span className="stat-lbl">Price</span>
-          </div>
-          <div className="stat">
-            <span className="stat-val">{minBed === maxBed ? minBed : `${minBed}–${maxBed}`}</span>
-            <span className="stat-lbl">Beds</span>
-          </div>
-          <div className="stat">
-            <span className="stat-val">{minBath === maxBath ? minBath : `${minBath}–${maxBath}`}</span>
-            <span className="stat-lbl">Baths</span>
-          </div>
-          <div className="stat">
-            <span className="stat-val">{homes.length}</span>
-            <span className="stat-lbl">Models</span>
-          </div>
+      <div className="card-stats">
+        <div className="stat">
+          <span className="stat-val">{fmt(priceMin)}{priceMax !== priceMin ? ` – ${fmt(priceMax)}` : ''}</span>
+          <span className="stat-lbl">Price</span>
         </div>
-      )}
+        <div className="stat">
+          <span className="stat-val">{sqftMin === sqftMax ? sqftMin.toLocaleString() : `${sqftMin.toLocaleString()}–${sqftMax.toLocaleString()}`}</span>
+          <span className="stat-lbl">Sqft</span>
+        </div>
+        <div className="stat">
+          <span className="stat-val">{bedroomsMin === bedroomsMax ? bedroomsMin : `${bedroomsMin}–${bedroomsMax}`}</span>
+          <span className="stat-lbl">Beds</span>
+        </div>
+        <div className="stat">
+          <span className="stat-val">{bathroomsMin === bathroomsMax ? bathroomsMin : `${bathroomsMin}–${bathroomsMax}`}</span>
+          <span className="stat-lbl">Baths</span>
+        </div>
+      </div>
     </li>
   );
 }

@@ -20,16 +20,6 @@ function haversine(lat1, lng1, lat2, lng2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function minPrice(c) {
-  if (!c.homes?.length) return Infinity;
-  return Math.min(...c.homes.map((h) => h.priceMin));
-}
-
-function maxPrice(c) {
-  if (!c.homes?.length) return -Infinity;
-  return Math.max(...c.homes.map((h) => h.priceMax ?? h.priceMin));
-}
-
 const EMPTY_FILTERS = {
   priceMin: '',
   priceMax: '',
@@ -57,29 +47,36 @@ export default function App() {
     setSelectedId((prev) => (prev === id ? null : id));
   }
 
+  const locationMatches = useMemo(() => {
+    if (!appliedLocation) return [];
+    const term = appliedLocation.toLowerCase();
+    return communities.filter(
+      (c) =>
+        c.city.toLowerCase().includes(term) ||
+        c.state.toLowerCase().includes(term) ||
+        c.zipCode.includes(term)
+    );
+  }, [communities, appliedLocation]);
+
+  const focusBounds = useMemo(() => {
+    if (locationMatches.length === 0) return null;
+    return locationMatches.map((c) => [c.latitude, c.longitude]);
+  }, [locationMatches]);
+
   const sortedCommunities = useMemo(() => {
-    if (sortBy === 'price-asc') return [...communities].sort((a, b) => minPrice(a) - minPrice(b));
-    if (sortBy === 'price-desc') return [...communities].sort((a, b) => maxPrice(b) - maxPrice(a));
-    if (sortBy === 'distance' && appliedLocation) {
-      const term = appliedLocation.toLowerCase();
-      const matches = communities.filter(
-        (c) =>
-          c.city.toLowerCase().includes(term) ||
-          c.state.toLowerCase().includes(term) ||
-          c.zipCode.includes(term)
+    if (sortBy === 'price-asc') return [...communities].sort((a, b) => a.priceMin - b.priceMin);
+    if (sortBy === 'price-desc') return [...communities].sort((a, b) => b.priceMax - a.priceMax);
+    if (sortBy === 'distance' && locationMatches.length > 0) {
+      const centerLat = locationMatches.reduce((s, c) => s + c.latitude, 0) / locationMatches.length;
+      const centerLng = locationMatches.reduce((s, c) => s + c.longitude, 0) / locationMatches.length;
+      return [...communities].sort(
+        (a, b) =>
+          haversine(a.latitude, a.longitude, centerLat, centerLng) -
+          haversine(b.latitude, b.longitude, centerLat, centerLng)
       );
-      if (matches.length > 0) {
-        const centerLat = matches.reduce((s, c) => s + c.latitude, 0) / matches.length;
-        const centerLng = matches.reduce((s, c) => s + c.longitude, 0) / matches.length;
-        return [...communities].sort(
-          (a, b) =>
-            haversine(a.latitude, a.longitude, centerLat, centerLng) -
-            haversine(b.latitude, b.longitude, centerLat, centerLng)
-        );
-      }
     }
     return communities;
-  }, [communities, sortBy, appliedLocation]);
+  }, [communities, sortBy, locationMatches]);
 
   function handleCreated() {
     refetch();
@@ -191,6 +188,7 @@ export default function App() {
             communities={sortedCommunities}
             selectedId={selectedId}
             onSelect={handleSelect}
+            focusBounds={focusBounds}
           />
         </main>
       </div>

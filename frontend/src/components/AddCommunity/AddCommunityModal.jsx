@@ -6,6 +6,12 @@ const EMPTY = {
   name: '', builder: '', description: '',
   address: '', city: '', state: '', zipCode: '',
   latitude: '', longitude: '', website: '',
+  priceMin: '', priceMax: '',
+  sqftMin: '', sqftMax: '',
+  lotSizeSqftMin: '', lotSizeSqftMax: '',
+  bedroomsMin: '', bedroomsMax: '',
+  bathroomsMin: '', bathroomsMax: '',
+  status: 'AVAILABLE',
 };
 
 export default function AddCommunityModal({ onClose, onCreated }) {
@@ -105,6 +111,62 @@ export default function AddCommunityModal({ onClose, onCreated }) {
           <label>
             Website
             <input name="website" type="url" value={form.website} onChange={handleChange} placeholder="https://…" />
+          </label>
+
+          <div className="form-group">
+            <label>Price Range ($) *</label>
+            <div className="range-row">
+              <input name="priceMin" type="number" placeholder="Min" value={form.priceMin} onChange={handleChange} required min="0" />
+              <span className="range-sep">–</span>
+              <input name="priceMax" type="number" placeholder="Max" value={form.priceMax} onChange={handleChange} required min="0" />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label>House Size (sqft) *</label>
+            <div className="range-row">
+              <input name="sqftMin" type="number" placeholder="Min" value={form.sqftMin} onChange={handleChange} required min="0" />
+              <span className="range-sep">–</span>
+              <input name="sqftMax" type="number" placeholder="Max" value={form.sqftMax} onChange={handleChange} required min="0" />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label>Lot Size (sqft) *</label>
+            <div className="range-row">
+              <input name="lotSizeSqftMin" type="number" placeholder="Min" value={form.lotSizeSqftMin} onChange={handleChange} required min="0" />
+              <span className="range-sep">–</span>
+              <input name="lotSizeSqftMax" type="number" placeholder="Max" value={form.lotSizeSqftMax} onChange={handleChange} required min="0" />
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label>Bedrooms *</label>
+              <div className="range-row">
+                <input name="bedroomsMin" type="number" placeholder="Min" value={form.bedroomsMin} onChange={handleChange} required min="0" />
+                <span className="range-sep">–</span>
+                <input name="bedroomsMax" type="number" placeholder="Max" value={form.bedroomsMax} onChange={handleChange} required min="0" />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Bathrooms *</label>
+              <div className="range-row">
+                <input name="bathroomsMin" type="number" step="0.5" placeholder="Min" value={form.bathroomsMin} onChange={handleChange} required min="0" />
+                <span className="range-sep">–</span>
+                <input name="bathroomsMax" type="number" step="0.5" placeholder="Max" value={form.bathroomsMax} onChange={handleChange} required min="0" />
+              </div>
+            </div>
+          </div>
+
+          <label>
+            Status
+            <select name="status" value={form.status} onChange={handleChange}>
+              <option value="AVAILABLE">Available</option>
+              <option value="COMING_SOON">Coming Soon</option>
+              <option value="SOLD_OUT">Sold Out</option>
+            </select>
           </label>
 
           {error && <p className="modal-error">{error}</p>}

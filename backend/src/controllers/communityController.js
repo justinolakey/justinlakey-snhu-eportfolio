@@ -2,50 +2,31 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
-function haversine(lat1, lng1, lat2, lng2) {
-  const R = 3958.8;
-  const toRad = (d) => (d * Math.PI) / 180;
-  const dLat = toRad(lat2 - lat1);
-  const dLng = toRad(lng2 - lng1);
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
-  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
-function buildHomeFilter(query) {
+function buildCommunityFilter(query) {
   const { priceMin, priceMax, sqftMin, sqftMax, lotSizeMin, lotSizeMax, bedrooms, bathrooms } = query;
   const where = {};
 
-  if (priceMin) where.priceMin = { ...where.priceMin, gte: parseInt(priceMin) };
+  if (priceMin) where.priceMax = { ...where.priceMax, gte: parseInt(priceMin) };
   if (priceMax) where.priceMin = { ...where.priceMin, lte: parseInt(priceMax) };
 
-  if (sqftMin) where.sqft = { ...where.sqft, gte: parseInt(sqftMin) };
-  if (sqftMax) where.sqft = { ...where.sqft, lte: parseInt(sqftMax) };
+  if (sqftMin) where.sqftMax = { ...where.sqftMax, gte: parseInt(sqftMin) };
+  if (sqftMax) where.sqftMin = { ...where.sqftMin, lte: parseInt(sqftMax) };
 
-  if (lotSizeMin) where.lotSizeSqft = { ...where.lotSizeSqft, gte: parseInt(lotSizeMin) };
-  if (lotSizeMax) where.lotSizeSqft = { ...where.lotSizeSqft, lte: parseInt(lotSizeMax) };
+  if (lotSizeMin) where.lotSizeSqftMax = { ...where.lotSizeSqftMax, gte: parseInt(lotSizeMin) };
+  if (lotSizeMax) where.lotSizeSqftMin = { ...where.lotSizeSqftMin, lte: parseInt(lotSizeMax) };
 
-  if (bedrooms) where.bedrooms = { gte: parseInt(bedrooms) };
-  if (bathrooms) where.bathrooms = { gte: parseFloat(bathrooms) };
+  if (bedrooms) where.bedroomsMax = { gte: parseInt(bedrooms) };
+  if (bathrooms) where.bathroomsMax = { gte: parseFloat(bathrooms) };
 
   return where;
 }
 
 async function getCommunities(req, res) {
   try {
-    const homeWhere = buildHomeFilter(req.query);
-    const hasHomeFilters = Object.keys(homeWhere).length > 0;
-    const { location } = req.query;
+    const where = buildCommunityFilter(req.query);
 
     const communities = await prisma.community.findMany({
-      where: hasHomeFilters ? { homes: { some: homeWhere } } : undefined,
-      include: {
-        homes: {
-          where: hasHomeFilters ? homeWhere : undefined,
-          orderBy: { priceMin: 'asc' },
-        },
-      },
+      where,
       orderBy: { name: 'asc' },
     });
 
@@ -59,10 +40,7 @@ async function getCommunities(req, res) {
 async function getCommunityById(req, res) {
   try {
     const id = parseInt(req.params.id);
-    const community = await prisma.community.findUnique({
-      where: { id },
-      include: { homes: { orderBy: { priceMin: 'asc' } } },
-    });
+    const community = await prisma.community.findUnique({ where: { id } });
 
     if (!community) {
       return res.status(404).json({ error: 'Community not found' });
@@ -76,9 +54,18 @@ async function getCommunityById(req, res) {
 }
 
 async function createCommunity(req, res) {
-  const { name, builder, description, address, city, state, zipCode, latitude, longitude, website } = req.body;
+  const {
+    name, builder, description, address, city, state, zipCode, latitude, longitude, website,
+    priceMin, priceMax, sqftMin, sqftMax, lotSizeSqftMin, lotSizeSqftMax,
+    bedroomsMin, bedroomsMax, bathroomsMin, bathroomsMax, status,
+  } = req.body;
 
-  if (!name || !builder || !address || !city || !state || !zipCode || latitude == null || longitude == null) {
+  const required = {
+    name, builder, address, city, state, zipCode, latitude, longitude,
+    priceMin, priceMax, sqftMin, sqftMax, lotSizeSqftMin, lotSizeSqftMax,
+    bedroomsMin, bedroomsMax, bathroomsMin, bathroomsMax,
+  };
+  if (Object.values(required).some((v) => v === undefined || v === null || v === '')) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
@@ -95,6 +82,17 @@ async function createCommunity(req, res) {
         latitude: parseFloat(latitude),
         longitude: parseFloat(longitude),
         website: website || null,
+        priceMin: parseInt(priceMin),
+        priceMax: parseInt(priceMax),
+        sqftMin: parseInt(sqftMin),
+        sqftMax: parseInt(sqftMax),
+        lotSizeSqftMin: parseInt(lotSizeSqftMin),
+        lotSizeSqftMax: parseInt(lotSizeSqftMax),
+        bedroomsMin: parseInt(bedroomsMin),
+        bedroomsMax: parseInt(bedroomsMax),
+        bathroomsMin: parseFloat(bathroomsMin),
+        bathroomsMax: parseFloat(bathroomsMax),
+        status: status || 'AVAILABLE',
       },
     });
     res.status(201).json({ data: community });
