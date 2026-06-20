@@ -1,10 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
+import { fmt } from '../../utils/format';
 import './MapView.css';
-
-function fmt(n) {
-  return n >= 1_000_000 ? `$${(n / 1_000_000).toFixed(1)}M` : `$${(n / 1_000).toFixed(0)}K`;
-}
 
 function FitBounds({ communities }) {
   const map = useMap();

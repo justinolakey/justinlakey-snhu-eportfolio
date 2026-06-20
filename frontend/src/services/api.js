@@ -18,14 +18,8 @@ export async function fetchCommunities(filters = {}) {
   return (await res.json()).data;
 }
 
-export async function fetchCommunityById(id) {
-  const res = await fetch(`${BASE}/communities/${id}`);
-  if (!res.ok) throw new Error('Community not found');
-  return (await res.json()).data;
-}
-
 export async function loginUser(email, password) {
-  const res = await fetch(`${BASE}/auth/login`, {
+  const res = await fetch(`${BASE}/user/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
@@ -36,7 +30,7 @@ export async function loginUser(email, password) {
 }
 
 export async function registerUser(email, password) {
-  const res = await fetch(`${BASE}/auth/register`, {
+  const res = await fetch(`${BASE}/user/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
