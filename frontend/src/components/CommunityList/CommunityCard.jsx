@@ -1,6 +1,11 @@
+// Renders a single community as a card in the sidebar list.
+// Shows the community name, builder, status badge, location, and
+// a 4-stat grid (price range, sqft range, bedrooms, bathrooms).
+
 import { fmt } from '../../utils/format';
 import './CommunityList.css';
 
+// Maps community status enum values to display labels and CSS badge classes
 const STATUS_LABEL = {
   AVAILABLE: { text: 'Available', cls: 'badge-available' },
   COMING_SOON: { text: 'Coming Soon', cls: 'badge-soon' },
@@ -14,6 +19,7 @@ export default function CommunityCard({ community, selected, onClick }) {
 
   return (
     <li className={`community-card${selected ? ' selected' : ''}`} onClick={onClick}>
+      {/* Header row: name/builder on the left, status badge on the right */}
       <div className="card-top">
         <div>
           <p className="card-name">{community.name}</p>
@@ -30,6 +36,7 @@ export default function CommunityCard({ community, selected, onClick }) {
         📍 {community.city}, {community.state} {community.zipCode}
       </p>
 
+      {/* Stats grid: shows ranges (e.g. "$280K – $520K") or single values */}
       <div className="card-stats">
         <div className="stat">
           <span className="stat-val">{fmt(priceMin)}{priceMax !== priceMin ? ` – ${fmt(priceMax)}` : ''}</span>

@@ -1,7 +1,12 @@
+// Admin panel modal for managing user accounts.
+// Displays a table of all registered users with their roles and approval status.
+// Provides Approve/Reject/Reset buttons to change each user's status.
+
 import { useState, useEffect } from 'react';
 import { fetchAdminUsers, updateUserStatus } from '../../services/api';
 import './AdminPanel.css';
 
+// Maps user status enum values to display labels
 const STATUS_LABEL = { PENDING: 'Pending', APPROVED: 'Approved', REJECTED: 'Rejected' };
 
 export default function AdminPanel({ onClose }) {
@@ -9,6 +14,7 @@ export default function AdminPanel({ onClose }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  // Fetch the user list on mount
   useEffect(() => {
     fetchAdminUsers()
       .then(setUsers)
@@ -16,6 +22,7 @@ export default function AdminPanel({ onClose }) {
       .finally(() => setLoading(false));
   }, []);
 
+  // Updates a user's status and refreshes their row in the table
   async function handleStatus(id, status) {
     try {
       const updated = await updateUserStatus(id, status);
@@ -55,6 +62,7 @@ export default function AdminPanel({ onClose }) {
                     </span>
                   </td>
                   <td className="admin-actions">
+                    {/* Show contextual actions based on current status */}
                     {u.status !== 'APPROVED' && (
                       <button className="btn-approve" onClick={() => handleStatus(u.id, 'APPROVED')}>
                         Approve

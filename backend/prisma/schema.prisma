@@ -1,3 +1,6 @@
+// Prisma schema for the New Home Communities application.
+// Defines the PostgreSQL database models and enums.
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,6 +10,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// A new-home community listing with location, builder info, and
+// min/max ranges for price, square footage, lot size, bedrooms, and bathrooms.
 model Community {
   id             Int             @id @default(autoincrement())
   name           String
@@ -16,34 +21,37 @@ model Community {
   city           String
   state          String
   zipCode        String
-  latitude       Float
+  latitude       Float           // GPS coordinates for map placement
   longitude      Float
   website        String?
-  priceMin       Int
-  priceMax       Int
-  sqftMin        Int
-  sqftMax        Int
-  lotSizeSqftMin Int
-  lotSizeSqftMax Int
+  priceMin       Int             // Lowest starting price across available floor plans
+  priceMax       Int             // Highest starting price across available floor plans
+  sqftMin        Int             // Smallest home square footage offered
+  sqftMax        Int             // Largest home square footage offered
+  lotSizeSqftMin Int             // Smallest lot size in square feet
+  lotSizeSqftMax Int             // Largest lot size in square feet
   bedroomsMin    Int
   bedroomsMax    Int
-  bathroomsMin   Float
+  bathroomsMin   Float           // Float to support half-baths (e.g. 2.5)
   bathroomsMax   Float
   status         CommunityStatus @default(AVAILABLE)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
 }
 
+// Availability status for a community
 enum CommunityStatus {
   AVAILABLE
   SOLD_OUT
   COMING_SOON
 }
 
+// Registered user account. New users default to PENDING status
+// and must be approved by an admin before they can add communities.
 model User {
   id        Int        @id @default(autoincrement())
   email     String     @unique
-  password  String
+  password  String     // bcrypt-hashed password
   role      UserRole   @default(USER)
   status    UserStatus @default(PENDING)
   createdAt DateTime   @default(now())
@@ -55,6 +63,7 @@ enum UserRole {
   ADMIN
 }
 
+// Approval workflow: PENDING -> APPROVED or REJECTED by an admin
 enum UserStatus {
   PENDING
   APPROVED

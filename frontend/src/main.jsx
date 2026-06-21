@@ -1,3 +1,7 @@
+// Application entry point.
+// Renders the root React component wrapped in the AuthProvider for
+// global authentication state, and imports Leaflet CSS for the map.
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import 'leaflet/dist/leaflet.css';

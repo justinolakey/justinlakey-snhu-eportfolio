@@ -1,7 +1,12 @@
+// Controller for user authentication (registration and login).
+
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const prisma = require("../db");
 
+// POST /api/user/register — Creates a new user account.
+// Hashes the password with bcrypt and stores the user with PENDING status.
+// An admin must approve the account before the user can add communities.
 async function register(req, res) {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -19,6 +24,8 @@ async function register(req, res) {
     res.status(201).json({ message: "Registration successful. Your account is pending admin approval." });
 }
 
+// POST /api/user/login — Authenticates a user and returns a JWT token.
+// The token is valid for 7 days and includes the user's ID as the payload.
 async function login(req, res) {
     const { email, password } = req.body;
     if (!email || !password) {

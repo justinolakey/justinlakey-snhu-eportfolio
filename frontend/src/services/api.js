@@ -1,10 +1,16 @@
+// API service layer — all HTTP calls to the backend.
+// The Vite dev server proxies /api requests to the Express backend.
+
 const BASE = '/api';
 
+// Returns an Authorization header if the user has a stored JWT token.
 function authHeaders() {
   const token = localStorage.getItem('nhc_token');
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
+// Fetches communities from the backend, optionally filtered by price, size, etc.
+// Non-empty filter values are sent as query string parameters.
 export async function fetchCommunities(filters = {}) {
   const params = new URLSearchParams();
   Object.entries(filters).forEach(([key, value]) => {
@@ -18,6 +24,7 @@ export async function fetchCommunities(filters = {}) {
   return (await res.json()).data;
 }
 
+// Authenticates a user and returns their JWT token + user profile.
 export async function loginUser(email, password) {
   const res = await fetch(`${BASE}/user/login`, {
     method: 'POST',
@@ -29,6 +36,7 @@ export async function loginUser(email, password) {
   return body;
 }
 
+// Registers a new user account. Returns a success message (account starts as PENDING).
 export async function registerUser(email, password) {
   const res = await fetch(`${BASE}/user/register`, {
     method: 'POST',
@@ -40,6 +48,7 @@ export async function registerUser(email, password) {
   return body;
 }
 
+// Creates a new community listing (requires an authenticated + approved user).
 export async function createCommunity(data) {
   const res = await fetch(`${BASE}/communities`, {
     method: 'POST',
@@ -51,6 +60,7 @@ export async function createCommunity(data) {
   return body.data;
 }
 
+// Admin: fetches the list of all registered users.
 export async function fetchAdminUsers() {
   const res = await fetch(`${BASE}/admin/users`, {
     headers: authHeaders(),
@@ -60,6 +70,7 @@ export async function fetchAdminUsers() {
   return body.data;
 }
 
+// Admin: updates a user's approval status (PENDING, APPROVED, or REJECTED).
 export async function updateUserStatus(id, status) {
   const res = await fetch(`${BASE}/admin/users/${id}/status`, {
     method: 'PATCH',

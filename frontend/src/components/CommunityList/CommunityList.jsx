@@ -1,3 +1,6 @@
+// Renders the scrollable list of community cards in the sidebar.
+// Shows loading and empty states when appropriate.
+
 import CommunityCard from './CommunityCard';
 import './CommunityList.css';
 

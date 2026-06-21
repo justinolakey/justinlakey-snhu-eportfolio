@@ -1,6 +1,12 @@
+// Collapsible filter panel in the sidebar for narrowing community results.
+// Provides min/max range inputs for price, sqft, and lot size, plus
+// dropdown selects for minimum bedrooms and bathrooms.
+// Filters are applied on button click (not on every keystroke).
+
 import './FilterPanel.css';
 
 export default function FilterPanel({ filters, onChange, onApply, onClear }) {
+  // Updates a single filter field in the parent's pending filter state
   function set(key, value) {
     onChange((prev) => ({ ...prev, [key]: value }));
   }
@@ -9,6 +15,7 @@ export default function FilterPanel({ filters, onChange, onApply, onClear }) {
     <div className="filter-panel">
       <h2 className="filter-heading">Search Filters</h2>
 
+      {/* Price range filter */}
       <div className="filter-group">
         <label>Price Range ($)</label>
         <div className="range-row">
@@ -18,6 +25,7 @@ export default function FilterPanel({ filters, onChange, onApply, onClear }) {
         </div>
       </div>
 
+      {/* Square footage range filter */}
       <div className="filter-group">
         <label>House Size (sqft)</label>
         <div className="range-row">
@@ -27,6 +35,7 @@ export default function FilterPanel({ filters, onChange, onApply, onClear }) {
         </div>
       </div>
 
+      {/* Lot size range filter */}
       <div className="filter-group">
         <label>Lot Size (sqft)</label>
         <div className="range-row">
@@ -36,6 +45,7 @@ export default function FilterPanel({ filters, onChange, onApply, onClear }) {
         </div>
       </div>
 
+      {/* Bedroom and bathroom minimum selectors (side by side) */}
       <div className="filter-row-2">
         <div className="filter-group">
           <label>Bedrooms (min)</label>
@@ -61,6 +71,7 @@ export default function FilterPanel({ filters, onChange, onApply, onClear }) {
         </div>
       </div>
 
+      {/* Apply sends filters to the API; Clear resets all filters and location search */}
       <div className="filter-actions">
         <button className="btn-apply" onClick={onApply}>Apply Filters</button>
         <button className="btn-clear" onClick={onClear}>Clear All</button>

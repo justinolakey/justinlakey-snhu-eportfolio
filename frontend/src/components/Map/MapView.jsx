@@ -1,8 +1,14 @@
+// Interactive Leaflet map displaying community locations as circle markers.
+// Includes map behavior components for auto-fitting bounds, focusing on
+// a searched region, and panning to a selected community.
+
 import { useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from 'react-leaflet';
 import { fmt } from '../../utils/format';
 import './MapView.css';
 
+// Adjusts the map viewport to fit all communities when no location search is active.
+// Tracks the previous set of community IDs to avoid redundant re-fits.
 function FitBounds({ communities }) {
   const map = useMap();
   const prevKey = useRef('');
@@ -19,6 +25,8 @@ function FitBounds({ communities }) {
   return null;
 }
 
+// Zooms/pans the map to focus on a specific region when a location search is active.
+// Receives an array of [lat, lng] pairs for the matching communities.
 function FocusBounds({ bounds }) {
   const map = useMap();
 
@@ -34,6 +42,7 @@ function FocusBounds({ bounds }) {
   return null;
 }
 
+// Smoothly pans the map to center on the selected community.
 function PanToSelected({ communities, selectedId }) {
   const map = useMap();
 
@@ -46,10 +55,12 @@ function PanToSelected({ communities, selectedId }) {
   return null;
 }
 
+// Renders a single community as a circle marker with a popup showing key details.
 function CommunityMarker({ community, selected, onSelect }) {
   const markerRef = useRef(null);
   const { priceMin, bedroomsMin, bedroomsMax } = community;
 
+  // Auto-open the popup when this marker becomes selected
   useEffect(() => {
     if (selected && markerRef.current) {
       markerRef.current.openPopup();
@@ -69,6 +80,7 @@ function CommunityMarker({ community, selected, onSelect }) {
       }}
       eventHandlers={{ click: () => onSelect(community.id) }}
     >
+      {/* autoPan disabled so the popup doesn't override PanToSelected's centering */}
       <Popup autoPan={false}>
         <div className="map-popup">
           <strong className="popup-name">{community.name}</strong>
@@ -84,6 +96,9 @@ function CommunityMarker({ community, selected, onSelect }) {
   );
 }
 
+// Main map component. Renders an OpenStreetMap tile layer with community markers.
+// When focusBounds is provided (location search active), zooms to that region;
+// otherwise fits the map to show all communities.
 export default function MapView({ communities, selectedId, onSelect, focusBounds }) {
   return (
     <MapContainer center={[31.5, -97.5]} zoom={6} className="map-container">

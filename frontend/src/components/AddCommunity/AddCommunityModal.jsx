@@ -1,7 +1,13 @@
+// Modal form for adding a new community listing.
+// Only accessible to authenticated users with APPROVED status.
+// Collects community info, location, and home specification ranges,
+// then submits to the backend API.
+
 import { useState } from 'react';
 import { createCommunity } from '../../services/api';
 import './AddCommunityModal.css';
 
+// Default empty form state for all fields
 const EMPTY = {
   name: '', builder: '', description: '',
   address: '', city: '', state: '', zipCode: '',
@@ -19,10 +25,12 @@ export default function AddCommunityModal({ onClose, onCreated }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Generic change handler for all form inputs (keyed by input name attribute)
   function handleChange(e) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
+  // Submits the form data to the API and triggers a list refresh on success
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
@@ -45,6 +53,7 @@ export default function AddCommunityModal({ onClose, onCreated }) {
         <h2 className="modal-title">Add Community</h2>
 
         <form onSubmit={handleSubmit} className="add-community-form">
+          {/* Basic info */}
           <div className="form-row">
             <label>
               Community Name *
@@ -61,6 +70,7 @@ export default function AddCommunityModal({ onClose, onCreated }) {
             <textarea name="description" value={form.description} onChange={handleChange} rows={3} />
           </label>
 
+          {/* Location info */}
           <label>
             Street Address *
             <input name="address" value={form.address} onChange={handleChange} required />
@@ -113,6 +123,7 @@ export default function AddCommunityModal({ onClose, onCreated }) {
             <input name="website" type="url" value={form.website} onChange={handleChange} placeholder="https://…" />
           </label>
 
+          {/* Home specification ranges (min/max pairs) */}
           <div className="form-group">
             <label>Price Range ($) *</label>
             <div className="range-row">
@@ -160,6 +171,7 @@ export default function AddCommunityModal({ onClose, onCreated }) {
             </div>
           </div>
 
+          {/* Community availability status */}
           <label>
             Status
             <select name="status" value={form.status} onChange={handleChange}>

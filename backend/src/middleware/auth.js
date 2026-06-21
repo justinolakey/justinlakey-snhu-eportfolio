@@ -1,6 +1,11 @@
+// Authentication and authorization middleware.
+// Verifies JWT tokens and checks user roles/status before allowing access.
+
 const jwt = require('jsonwebtoken');
 const prisma = require('../db');
 
+// Verifies the JWT Bearer token from the Authorization header.
+// On success, attaches the full user object to req.user for downstream handlers.
 async function authenticate(req, res, next) {
   const header = req.headers.authorization;
   if (!header?.startsWith('Bearer ')) {
@@ -18,6 +23,8 @@ async function authenticate(req, res, next) {
   }
 }
 
+// Ensures the authenticated user has been approved by an admin.
+// Used to gate community creation — only approved users can add listings.
 function requireApproved(req, res, next) {
   if (req.user.status !== 'APPROVED') {
     return res.status(403).json({ error: 'Account pending approval' });
@@ -25,6 +32,7 @@ function requireApproved(req, res, next) {
   next();
 }
 
+// Restricts access to admin-only endpoints (e.g. user management).
 function requireAdmin(req, res, next) {
   if (req.user.role !== 'ADMIN') {
     return res.status(403).json({ error: 'Forbidden' });

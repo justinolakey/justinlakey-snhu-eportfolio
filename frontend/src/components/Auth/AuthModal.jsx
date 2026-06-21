@@ -1,9 +1,13 @@
+// Login/Registration modal with tabbed interface.
+// On successful login, the modal closes and the user is authenticated.
+// On successful registration, shows a confirmation message (account is PENDING).
+
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import './AuthModal.css';
 
 export default function AuthModal({ onClose }) {
-  const [tab, setTab] = useState('login');
+  const [tab, setTab] = useState('login');    // 'login' or 'register'
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -20,8 +24,9 @@ export default function AuthModal({ onClose }) {
     try {
       if (tab === 'login') {
         await login(email, password);
-        onClose();
+        onClose(); // Close modal on successful login
       } else {
+        // Registration returns a message; don't close — show confirmation
         const res = await register(email, password);
         setSuccessMsg(res.message);
         setEmail('');
@@ -39,6 +44,7 @@ export default function AuthModal({ onClose }) {
       <div className="modal-box" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>✕</button>
 
+        {/* Tab switcher: Sign In / Register */}
         <div className="modal-tabs">
           <button
             className={tab === 'login' ? 'active' : ''}
@@ -54,6 +60,7 @@ export default function AuthModal({ onClose }) {
           </button>
         </div>
 
+        {/* After successful registration, show the confirmation message */}
         {successMsg ? (
           <div className="modal-success">
             <p>{successMsg}</p>
