@@ -14,13 +14,13 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Global middleware
-app.use(cors());             // Allow cross-origin requests from the frontend
-app.use(express.json());     // Parse JSON request bodies
+app.use(cors()); // Allow cross-origin requests from the frontend
+app.use(express.json()); // Parse JSON request bodies
 
 // API route handlers
-app.use("/api/communities", communityRoutes); // Public community browsing + authenticated creation
-app.use("/api/user", userRoutes);             // User registration and login
-app.use("/api/admin", adminRoutes);           // Admin-only user management
+app.use("/api/communities", communityRoutes); // Public community browsing and creation (only for authenticated users)
+app.use("/api/user", userRoutes); // User registration and login
+app.use("/api/admin", adminRoutes); // Admin-only user management
 
 // Simple health check endpoint for monitoring
 app.get("/api/health", (_req, res) => {

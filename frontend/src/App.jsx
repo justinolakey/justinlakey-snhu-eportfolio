@@ -223,7 +223,7 @@ export default function App() {
         </main>
       </div>
 
-      {/* ─── Modals (rendered conditionally) ─── */}
+      {/* Modals, rendered conditionally based on authentication status */}
       {modal === 'auth' && <AuthModal onClose={() => setModal(null)} />}
       {modal === 'add' && (
         <AddCommunityModal onClose={() => setModal(null)} onCreated={handleCreated} />

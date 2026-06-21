@@ -4,6 +4,7 @@ const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
+// This script creates an admin user based on environment variables for development purposes.
 async function main() {
   const email = process.env.ADMIN_EMAIL;
   const password = process.env.ADMIN_PASSWORD;
@@ -19,7 +20,7 @@ async function main() {
     return;
   }
 
-  const hashed = await bcrypt.hash(password, 10);
+  const hashed = await bcrypt.hash(password, 10); // Hash the password before storing it
   await prisma.user.create({
     data: { email, password: hashed, role: 'ADMIN', status: 'APPROVED' },
   });
