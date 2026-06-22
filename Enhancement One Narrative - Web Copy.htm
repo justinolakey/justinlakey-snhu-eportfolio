@@ -5,7 +5,7 @@ xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
 xmlns="http://www.w3.org/TR/REC-html40">
 
 <head>
-<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta http-equiv=Content-Type content="text/html; charset=utf-8">
 <meta name=ProgId content=Word.Document>
 <meta name=Generator content="Microsoft Word 15">
 <meta name=Originator content="Microsoft Word 15">
@@ -1994,6 +1994,11 @@ ul
 
 <body lang=EN-US style='tab-interval:.5in;word-wrap:break-word'>
 
+<div style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#0f3460;padding:0.6rem 1.5rem;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif">
+  <a href="index.html" style="color:#fff;text-decoration:none;font-size:0.92rem;font-weight:600">&larr; Back to ePortfolio</a>
+</div>
+<div style="height:2.5rem"></div>
+
 <div class=WordSection1>
 
 <h1>Enhancement One Narrative</h1>
@@ -2018,73 +2023,73 @@ there are multiple areas for improvement in the polish phase.</p>
 
 <p class=MsoListParagraphCxSpFirst style='text-indent:-.25in;mso-list:l9 level1 lfo7'><![if !supportLists]><span
 style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]>admin.js – this adds the routes for the admin
+Symbol'><span style='mso-list:Ignore'>â€“<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>admin.js â€“ this adds the routes for the admin
 account on the backend. This account is my account that is the only account
 that can authorize other user accounts. There is a new GET route to list all
 the users and a PATCH route to approve new user accounts</p>
 
 <p class=MsoListParagraphCxSpMiddle style='text-indent:-.25in;mso-list:l9 level1 lfo7'><![if !supportLists]><span
 style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]>user.js – this adds the routes for the user
+Symbol'><span style='mso-list:Ignore'>â€“<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>user.js â€“ this adds the routes for the user
 accounts on the backend. There are two routes for users. One POST route to
 register and one POST route to login.</p>
 
 <p class=MsoListParagraphCxSpMiddle style='text-indent:-.25in;mso-list:l9 level1 lfo7'><![if !supportLists]><span
 style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]>adminController.js – the controller for the new
+Symbol'><span style='mso-list:Ignore'>â€“<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>adminController.js â€“ the controller for the new
 admin account. This file has functions to get the users and update user status.</p>
 
 <p class=MsoListParagraphCxSpMiddle style='text-indent:-.25in;mso-list:l9 level1 lfo7'><![if !supportLists]><span
 style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]>userController.js – the controller for the user
+Symbol'><span style='mso-list:Ignore'>â€“<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>userController.js â€“ the controller for the user
 accounts with functions to register and login.</p>
 
 <p class=MsoListParagraphCxSpMiddle style='text-indent:-.25in;mso-list:l9 level1 lfo7'><![if !supportLists]><span
 style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]>auth.js – provides security for the new
+Symbol'><span style='mso-list:Ignore'>â€“<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>auth.js â€“ provides security for the new
 accounts. Has functions for authentication, require approval for user accounts,
 and require admin to ensure only the admin account can approve user accounts.</p>
 
 <p class=MsoListParagraphCxSpLast style='text-indent:-.25in;mso-list:l9 level1 lfo7'><![if !supportLists]><span
 style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]>seed-admin.js – to seed the admin account in the
+Symbol'><span style='mso-list:Ignore'>â€“<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>seed-admin.js â€“ to seed the admin account in the
 database. Uses variables from the .env file (updated)</p>
 
 <p class=MsoNormal><b>Frontend:<o:p></o:p></b></p>
 
 <p class=MsoListParagraphCxSpFirst style='text-indent:-.25in;mso-list:l0 level1 lfo8'><![if !supportLists]><span
 style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Symbol'><span style='mso-list:Ignore'>â€“<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span class=SpellE>AdminPanel.jsx</span> (and .<span
-class=SpellE>css</span>) – This new component is the interface for the admin
+class=SpellE>css</span>) â€“ This new component is the interface for the admin
 user to approve or reject user accounts.</p>
 
 <p class=MsoListParagraphCxSpMiddle style='text-indent:-.25in;mso-list:l0 level1 lfo8'><![if !supportLists]><span
 style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Symbol'><span style='mso-list:Ignore'>â€“<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span class=SpellE>AuthModal.jsx</span> (and .<span
-class=SpellE>css</span>) – this new component is how the users including admins
+class=SpellE>css</span>) â€“ this new component is how the users including admins
 login or new users can register</p>
 
 <p class=MsoListParagraphCxSpMiddle style='text-indent:-.25in;mso-list:l0 level1 lfo8'><![if !supportLists]><span
 style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Symbol'><span style='mso-list:Ignore'>â€“<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span class=SpellE>AddCommunityModal.jsx</span>
-(and .<span class=SpellE>css</span>) – this component allows users to add a new
+(and .<span class=SpellE>css</span>) â€“ this component allows users to add a new
 community. It is a form that has fields for all the required information. I
 need to do lots of testing with this form to improve the UX and ensure it
 validates inputs.</p>
 
 <p class=MsoListParagraphCxSpLast style='text-indent:-.25in;mso-list:l0 level1 lfo8'><![if !supportLists]><span
 style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]><span class=SpellE>AuthContext.jsx</span> – has
+Symbol'><span style='mso-list:Ignore'>â€“<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span class=SpellE>AuthContext.jsx</span> â€“ has
 the context for the user that includes what actions they are authorized to do.</p>
 
 <p class=MsoNormal><b>Here are the modified files:<o:p></o:p></b></p>
@@ -2093,49 +2098,49 @@ the context for the user that includes what actions they are authorized to do.</
 
 <p class=MsoListParagraphCxSpFirst style='text-indent:-.25in;mso-list:l7 level1 lfo9'><![if !supportLists]><span
 style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Symbol'><span style='mso-list:Ignore'>â€“<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span class=SpellE><span class=GramE>package.json</span></span>
-and package-<span class=SpellE><span class=GramE>lock.json</span></span> –
+and package-<span class=SpellE><span class=GramE>lock.json</span></span> â€“
 necessary dependencies for the new features.</p>
 
 <p class=MsoListParagraphCxSpMiddle style='text-indent:-.25in;mso-list:l7 level1 lfo9'><![if !supportLists]><span
 style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]>app.js – to wire in the new routes</p>
+Symbol'><span style='mso-list:Ignore'>â€“<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>app.js â€“ to wire in the new routes</p>
 
 <p class=MsoListParagraphCxSpLast style='text-indent:-.25in;mso-list:l7 level1 lfo9'><![if !supportLists]><span
 style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Symbol'><span style='mso-list:Ignore'>â€“<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]><span class=SpellE><span class=GramE>schema.prisma</span></span>
-– added a model for users</p>
+â€“ added a model for users</p>
 
 <p class=MsoNormal><b>Frontend:<o:p></o:p></b></p>
 
 <p class=MsoListParagraphCxSpFirst style='text-indent:-.25in;mso-list:l6 level1 lfo10'><![if !supportLists]><span
 style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]><span class=SpellE>main.jsx</span> – imported
+Symbol'><span style='mso-list:Ignore'>â€“<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span class=SpellE>main.jsx</span> â€“ imported
 the <span class=SpellE>AuthProvider</span> from the new <span class=SpellE>AuthContext.jsx</span>
 file</p>
 
 <p class=MsoListParagraphCxSpMiddle style='text-indent:-.25in;mso-list:l6 level1 lfo10'><![if !supportLists]><span
 style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]><span class=SpellE>App.jsx</span> – many updates
+Symbol'><span style='mso-list:Ignore'>â€“<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]><span class=SpellE>App.jsx</span> â€“ many updates
 to add the new components, accounts, and necessary authorizations</p>
 
 <p class=MsoListParagraphCxSpMiddle style='text-indent:-.25in;mso-list:l6 level1 lfo10'><![if !supportLists]><span
 style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]>api.js – added the functions <span class=SpellE>loginUser</span>,
+Symbol'><span style='mso-list:Ignore'>â€“<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>api.js â€“ added the functions <span class=SpellE>loginUser</span>,
 <span class=SpellE>registerUser</span>, <span class=SpellE>createCommunity</span>,
 <span class=SpellE>fetchAdminUsers</span>, <span class=SpellE>updateUserStatus</span>,
 and <span class=SpellE>authHeaders</span>.</p>
 
 <p class=MsoListParagraphCxSpLast style='text-indent:-.25in;mso-list:l6 level1 lfo10'><![if !supportLists]><span
 style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]>useCommunities.js – added functionality to
+Symbol'><span style='mso-list:Ignore'>â€“<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>useCommunities.js â€“ added functionality to
 refresh if a new community is added</p>
 
 <ol style='margin-top:0in' start=2 type=1>
@@ -2159,29 +2164,29 @@ database. Also added security features to authenticate and authorize the users.<
 </ol>
 
 <p class=MsoNormal>I am not entirely sure. One of the outcomes I planned for
-this enhancement I know I have worked on. The “Develop a security mindset…”
+this enhancement I know I have worked on. The â€œDevelop a security mindsetÂ Â 
 outcome is achieved through adding authentication and authorization via the
 admin and user accounts. All accounts use <span class=SpellE>json</span> web
-tokens (JWT) to provide security. The second outcome I listed is “Employ
-strategies for building collaborative…”. This outcome might be the one I
+tokens (JWT) to provide security. The second outcome I listed is â€œEmploy
+strategies for building collaborativeÂ Â . This outcome might be the one I
 struggle with the most. I feel this outcome is difficult to quantify with a
 final project that I work on by myself. This would be an area where I could use
 more guidance.</p>
 
 <p class=MsoNormal>Insights after finishing the project:<br>
-<b>Collaborating in a team environment</b> – added comments throughout to make
+<b>Collaborating in a team environment</b> â€“ added comments throughout to make
 the code easier to understand and maintain. Admin accounts make it easier to
 add other team members as the project grows.</p>
 
-<p class=MsoNormal><b>Communicating with stakeholders</b> – added the customer
+<p class=MsoNormal><b>Communicating with stakeholders</b> â€“ added the customer
 interface to make it easier for customers to interact with the website.</p>
 
-<p class=MsoNormal><b>Software engineering and database</b> – to make the
+<p class=MsoNormal><b>Software engineering and database</b> â€“ to make the
 customer interface I had to add multiple new <span class=SpellE>modals</span>
 to the front-end, routes to the <span class=GramE>back-end</span>, and users to
 the database.</p>
 
-<p class=MsoNormal><b>Security</b> – user accounts use Json Web Tokens (JWT)
+<p class=MsoNormal><b>Security</b> â€“ user accounts use Json Web Tokens (JWT)
 for authentication. The admin account uses credentials that are hashed for
 security. Only admin approved user accounts can add new communities. The form
 to add new communities validates all inputs.</p>
@@ -2213,11 +2218,15 @@ features for this enhancement. However, there is still plenty of room for
 polishing before I am willing to call it complete. I think this process of
 using AI tools to add new features in an iterative process is a skill set that
 will be valuable in the workplace, especially when coupled with a test to the
-requirements mindset. This process ensures that the customer’s needs are met and
+requirements mindset. This process ensures that the customerâ€œs needs are met and
 minimizes bugs and security issues.</p>
 
 <p class=MsoNormal><o:p>&nbsp;</o:p></p>
 
+</div>
+
+<div style="background:#0f3460;padding:0.75rem 1.5rem;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;margin-top:2rem">
+  <a href="index.html" style="color:#fff;text-decoration:none;font-size:0.92rem;font-weight:600">&larr; Back to ePortfolio</a>
 </div>
 
 </body>
